@@ -135,6 +135,26 @@ app.post("/edit/:id", (req, res) => {
     res.redirect(`/view/${id}`);
 });
 
+// Delete 
+app.get("/remove/:id", (req, res) => {
+    const id = req.params.id;
+
+    const result = fs.readFileSync('test.json', 'utf-8');
+    // 배열의 index 찾기 
+    let data = JSON.parse(result);
+    let removed_idx = 0; 
+    data['result'].forEach((element, index)=> { 
+        if (element['id'] == id) {
+            removed_idx = index // 해당되는 인덱스 번호   
+        }
+    });
+    data['result'].splice(removed_idx, 1); // 숫자는 삭제할 개수 
+    // splice는 원본 데이터 객체를 변경시킴 
+    // 이를 JSON 파일에 다시 저장 
+    fs.writeFileSync('test.json', JSON.stringify(data), 'utf-8');
+    res.redirect("/list");
+});
+
 app.listen(PORT, (req, res) => {
     console.log(`게시판 서버를 시작합니다.`);
 });
