@@ -1,0 +1,16 @@
+{
+    "name": "홍길동",
+    "age": 49,
+	"isStudent": false,
+    "hobby": ["카페가기", "독서", "등산"],
+    "address": {
+        "도시": "서울",
+        "우편번호": "08091"
+    },
+    "과정": [
+        {"name": "iOS"},
+        {"name": "Node.js"},
+        {"name": "Database"},
+        {"name": "Project 실습"}
+    ]
+}
