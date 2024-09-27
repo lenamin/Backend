@@ -75,6 +75,7 @@ app.post("/create", (req, res) => {
         content: req.body.content, 
         writer: req.body.writer, 
         createdAt: createdAt,
+        count: 0,
     }
     // 신규 글 추가 
     data['result'].push(newPost);
@@ -102,14 +103,28 @@ app.get("/view/:id", (req, res) => {
     const id = req.params.id; // router 뒤에 있는 ID를 id에 담는다. 
 
     const data = fs.readFileSync('test.json', 'utf-8');
-    const result = JSON.parse(data);
-    let post = {};
-    const posts = result["result"];
-    posts.forEach(item=> { // posts 를 쭉 돌면서 id가 같은것만 item에 넣어준다. 
+    // 게시글 count 
+    let result = JSON.parse(data)
+    let post = {}
+
+    result['result'].forEach((item)=> {
         if (item['id'] == id) {
             post = item;
+            item.count = item.count + 1;
         }
-    });
+    })
+
+    fs.writeFileSync('test.json', JSON.stringify(result), 'utf-8');
+
+    
+    // const result = JSON.parse(data);
+    // let post = {};
+    // const posts = result["result"];
+    // posts.forEach(item=> { // posts 를 쭉 돌면서 id가 같은것만 item에 넣어준다. 
+    //     if (item['id'] == id) {
+    //         post = item;
+    //     }
+    // });
     res.render("view", { post: post });
 })
 
@@ -126,6 +141,7 @@ app.post("/edit/:id", (req, res) => {
             item['title'] = req.body.title;
             item['content'] = req.body.content;
             item['writer'] = req.body.writer;
+            item['count'] = item["count"] ? item["count"] : 0;
         }
     }
 
