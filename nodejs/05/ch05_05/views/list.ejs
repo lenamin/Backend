@@ -33,6 +33,15 @@
                     </tbody>
                 </table>
                 <p></p>
+                <div>
+                    <% if (currentPage > 1 ) { %>
+                        <a href="/list?page=<%=currentPage - 1%>">이전</a>
+                    <% } %> <% for (let i = 1; i <= totalPage; i++) { %>
+                    <a href="/list?page=<%=i%>"><%=i%></a>
+                    <% } %> <% if (currentPage < totalPage) { %>
+                    <a href="/list?page=<%=currentPage + 1%>">다음</a>
+                    <% } %>
+                </div>
                 <a class="button" href="/create">글쓰기</a>
             </figure>
         </div>
