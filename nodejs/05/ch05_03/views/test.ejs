@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>
+            test.json 데이터 보기 
+        </title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    </head>
+    <body>
+        <table>
+            <thead>  <!-- xpdlqmf gpej -->
+                <th>제목</th>
+                <th>내용</th>
+            </thead>
+            <thead>
+                <%
+                    posts.forEach((item)=> {
+                %>
+                        <tr>
+                            <td><%= item['title'] %></td>
+                            <td><%= item['content'] %></td>
+                        </tr>
+                <%
+                    });
+                %>
+            </thead>
+        </table>
+    </body>
+</html>
