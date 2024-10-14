@@ -45,4 +45,19 @@ app.get("/posts", (req, res) => {
 
 });
 
+// 3. POST /posts 게시글 쓰기 
+app.post("/posts", (req, res) => {
+  const { title, content, author } = req.body;
+  let sql = `
+    insert into posts(title, content, author) values(?, ?, ?)
+    `;
+  
+  const stmt = db.prepare(sql);
+  const result = stmt.run(title, content, author);
+  
+  console.log(`${JSON.stringify(result)}`);
+  res.status(201).json({id: result.lastInsertRowid, title: title, content: content}) // 상태코드 201로 json 포맷으로 내려준다 
+
+});
+
 app.listen(PORT);
