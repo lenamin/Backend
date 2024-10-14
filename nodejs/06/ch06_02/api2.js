@@ -45,6 +45,27 @@ app.get("/posts", (req, res) => {
 
 });
 
+
+// 2. GET /posts/1 상ㅔ 게시글 가져오기  
+app.get("/posts/:id", (req, res) => {
+  const id = req.params.id;
+
+  // 쿼리문 작성 
+  let sql = `select id, title, content, author, createdAt, count from posts where id = ?`;
+
+  // 조회수 증가시키는 쿼리 
+  let count_sql = `update posts set count = count + 1 where id = ?`;
+
+  db.prepare(count_sql).run(id);
+  // 메서드 체이닝 
+  // const stmt = db.prepare(count_sql)
+  // stmt.run(id);
+
+  const post = db.prepare(sql).get(id)
+  res.status(200).json({ item: post});
+});
+
+
 // 3. POST /posts 게시글 쓰기 
 app.post("/posts", (req, res) => {
   const { title, content, author } = req.body;
@@ -58,6 +79,29 @@ app.post("/posts", (req, res) => {
   console.log(`${JSON.stringify(result)}`);
   res.status(201).json({id: result.lastInsertRowid, title: title, content: content}) // 상태코드 201로 json 포맷으로 내려준다 
 
+});
+
+// 4. PUT /posts/1 게시글 수정 
+app.put("/posts/:id", (req, res) => {
+  const id = req.params.id;
+  const {title, content} = req.body;
+
+  let sql = `update posts set title = ?, content = ? where id = ?`;
+
+  // 에러처리 
+  try {
+    const result = db.prepare(sql).run(title, content, id);
+  
+    console.log(`result => ${JSON.stringify(result)}`);
+
+    if (result.changes) {
+      res.status(200).json({ result: "success"});
+    } else {
+      res.status(404).json({ error: "post is not found" });
+    }
+  } catch (e) {
+    res.status(500).json({error: e });
+  }
 });
 
 app.listen(PORT);
