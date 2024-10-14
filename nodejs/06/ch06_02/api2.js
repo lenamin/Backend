@@ -21,7 +21,14 @@ const create_sql = `
     author VARCHAR(100),
     createdAt datetime default current_timestamp,
     count integer default 0  
-);
+  );
+
+  create table if not exists comments (
+    id integer primary key autoincrement,
+    content text not null,
+    postId integer,
+    foreign key(postId) references posts(id)
+  );
 `
 db.exec(create_sql); // create_sql 쿼리를 실행할 수 있다 
 
@@ -45,7 +52,6 @@ app.get("/posts", (req, res) => {
 
 });
 
-
 // 2. GET /posts/1 상ㅔ 게시글 가져오기  
 app.get("/posts/:id", (req, res) => {
   const id = req.params.id;
@@ -64,7 +70,6 @@ app.get("/posts/:id", (req, res) => {
   const post = db.prepare(sql).get(id)
   res.status(200).json({ item: post});
 });
-
 
 // 3. POST /posts 게시글 쓰기 
 app.post("/posts", (req, res) => {
@@ -103,5 +108,88 @@ app.put("/posts/:id", (req, res) => {
     res.status(500).json({error: e });
   }
 });
+
+// 5. DELETE /posts/1 게시글 삭제 
+app.delete("/posts/:id", (req, res) => {
+  const id = req.params.id;
+  let sql = `delete from posts where id = ?`;
+
+  try {
+    const result = db.prepare(sql).run(id)
+    if (result.changes) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ error: 'post not found' });
+    }
+  } catch (e) {
+    res.status(500).json({ error: e });
+  }
+});
+
+/* 댓글 기능 */
+// 1. 특정 포스트에 댓글 추가 
+app.post("/posts/:id/comments", (req, res) => {
+  const { content } = req.body; // req.body.content를 content에 할당한다. 
+  const postId = req.params.id;
+
+  const stmt = db.prepare(`insert into comments(postId, content) values(?, ?)`);
+  const result = stmt.run(postId, content);
+
+  res.status(201).json({ id: result.lastInsertRowid, postId: postId, content: content });
+  // 신규 생성된 댓글의 아이디와 내용, 게시글 아이디를 클라이언트에 반환해줌 
+});
+
+// 2. 특정 포스트 댓글 가져오기 
+app.get("/posts/:id/comments", (req, res) => {
+  const postId = req.params.id;
+  const comments = db.prepare(`select * from comments where postId = ?`).all(postId) // postId가 ?안으로 들어가면서 comments 변수에 담기겠지 
+
+  res.json( { comments: comments });
+});
+
+app.get("/comments/:id", (req, res) => {
+  const id = req.params.id;
+  const comments = db.prepare(`select * from comments where postId = ?`).all(id) // postId가 ?안으로 들어가면서 comments 변수에 담기겠지 
+
+  res.json( { comments: comments });
+});
+
+// 3. 댓글 삭제 
+app.delete("/comments/:id", (req, res) => {
+  const id = req.params.id;
+  let sql = `delete from comments where id = ?`;
+
+  const result = db.prepare(sql).run(id);
+
+  if (result.changes) {
+    res.status(204).end();
+  } else {
+    res.status(404).json({ error: 'comment not found' });
+  }
+})
+
+// 4. 댓글 수정 
+app.put("/comments/:id", (req, res) => { // 댓글 아이디
+  const id = req.params.id;
+  const { content } = req.body;
+
+  let sql = `update comments set content = ? where id = ?`;
+
+  try {
+    const result = db.prepare(sql).run(content, id);
+    console.log(`result => ${JSON.stringify(result)}`);
+
+    if (result.changes) {
+      res.status(200).json({ result: "success" });
+    } else {
+      res.status(404).json({ error: "comment not found" });
+    }
+
+  } catch (e) {
+    res.status(500).json( {error: e});
+  }
+
+})
+
 
 app.listen(PORT);
