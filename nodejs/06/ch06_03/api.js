@@ -40,9 +40,21 @@ const schema = buildSchema(`
     createdAt: String 
   }
 
+  input PostInput {
+  	title: String!
+	  content: String!
+	  author: String
+  }
+
   type Query {
     getPosts: [Post]
     getPost(id: ID!): Post 
+  }
+
+  type Mutation {
+  	createPost(input: PostInput): Post
+    updatePost(id: ID!, input: PostInput): Post
+    deletePost(id: ID!): String
   }
 `);
 
@@ -59,6 +71,25 @@ const root = {
     const stmt = db.prepare(`select * from posts where id = ?`);
     return stmt.get(id);
   },
+
+  // 게시글 추가하기 
+  createPost: ({input}) => {
+    const stmt = db.prepare(`insert into posts (title, content, author) values(?,?,?)`);
+    const info = stmt.run(input.title, input.content, input.author)
+    return { id: info.lastInsertRowid, ...input } 
+  },
+
+  updatePost: ({ id, input }) => {
+    const stmt = db.prepare(`update posts set title = ?, content = ? where id = ?`);
+    const info = stmt.run(input.title, input.content, id);
+    return { id, ...input }
+  },
+
+  deletePost: ({id}) => {
+    const stmt = db.prepare(`delete from posts where id = ?`);
+    const info = stmt.run(id);
+    return `Post ${id} is deleted!! `
+  }
 };
 
 app.use(
