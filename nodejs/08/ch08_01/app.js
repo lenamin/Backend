@@ -43,4 +43,13 @@ const User = sequelize.define("User", {
   })
   console.log(`usero1=> ${JSON.stringify(user)}`);
 
+  // update User set email = 'user01@naver.com' where username = 'user01';
+  await User.update({
+    // 첫번째 : update 할 대상 
+    email: 'user01@naver.com'
+  }, {
+    where: {
+      username: 'user01'
+    }
+  });
 })();
