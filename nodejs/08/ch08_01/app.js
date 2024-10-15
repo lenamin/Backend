@@ -33,4 +33,6 @@ const User = sequelize.define("User", {
 
   console.log(`user created => ${JSON.stringify(user1)}`);
 
+  const users = await User.findAll();
+  console.log(`user=> ${JSON.stringify(users)}`);
 })();
