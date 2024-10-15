@@ -8,7 +8,7 @@ const sequelize = new Sequelize({
 
 // 모델 생성 
 const User = sequelize.define("User", {
-  user: {
+  username: {
 	  type: DataTypes.STRING, 
 	  allowNull: false
   },
@@ -23,6 +23,14 @@ const User = sequelize.define("User", {
 (async () => {
 // 실제 await를 쓰기 위해 빈 async 함수 정의 및 호출
 // 실제 모델 생성, 데이터 생성, 데이터 가져옴 
-  await sequelize.sync({ force: true }); // 강제로 무조건 만들기, 테이블 컬럼 등의 변경이 생긴 경우 사용할 수 있다. 
+  await sequelize.sync({ force: false }); 
+  
+  // user 생성 
+  const user1 = await User.create({
+    username: "user01",
+    email: "user02@smail.com",
+  });
+
+  console.log(`user created => ${JSON.stringify(user1)}`);
 
 })();
