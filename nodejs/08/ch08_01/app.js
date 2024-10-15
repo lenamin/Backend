@@ -7,6 +7,12 @@ const sequelize = new Sequelize({
 });
 
 // 모델 생성 
+// sequelize.define: 
+  /* 함수기반 정의 (좀 더 전통적인 방법) -> 좀 더 작은 프로젝트에서 사용 / 타입스크립트 지원이 잘 안됨 / 간단한 모델 정의할 때 주로 사용됨 */
+
+// Model.init(): 
+  /*객체지향 언어처럼 타입스크립트에 대한 통합이 잘 되어 있음 -> EC6 문법 지원 / 복잡하거나 대규모 프로젝트에서 작업*/
+  
 const User = sequelize.define("User", {
   username: {
 	  type: DataTypes.STRING, 
