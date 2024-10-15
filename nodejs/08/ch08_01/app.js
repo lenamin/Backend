@@ -52,4 +52,10 @@ const User = sequelize.define("User", {
       username: 'user01'
     }
   });
+
+  await User.destroy({
+    where: {
+      username: 'user01',
+    },
+  });
 })();
