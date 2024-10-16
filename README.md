@@ -11,4 +11,4 @@
 | 9   | RESTful API with Better-Sqlite3            | [Better-Sqlite3 Docs](https://github.com/WiseLibs/better-sqlite3)                         | Better-Sqlite3, RESTful API, SQLite |
 | 10  | GraphQL                                    | [GraphQL Docs](https://graphql.org/)                                                      | GraphQL, API, Node.js           |
 | 11  | ORM (Object-Relational Mapping)            | [ORM Overview](https://www.geeksforgeeks.org/what-is-object-relational-mapping-orm/)     | ORM, Database, Express          |
-| 12  | CRUD Implementation in Sequelize-Cli, Migration | [Source Code](https://github.com/lenamin/Backend/tree/main/nodejs/08/ch08_02))                                                  |   |
+| 12  | CRUD Implementation in Sequelize-Cli, Migration | [Source Code](https://github.com/lenamin/Backend/tree/main/nodejs/08/ch08_02)                                                  |   |
