@@ -25,6 +25,17 @@ app.get("/posts", async (req, res) => {
   res.json({ data: posts });
 });
 
+app.get("/posts/:id", async (req, res) => {
+  const id = req.params.id;
+  const post = await models.Post.findByPk(id)
+
+  if (post) {
+    res.status(200).json({data: post});
+  } else {
+    res.status(404).json(`Post is not found`);
+  }
+})
+
 // 서버 띄우기 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT} 에서`);
