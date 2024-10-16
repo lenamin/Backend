@@ -82,6 +82,7 @@ app.get("/posts/:id/comments", async (req, res) => {
   const postId = req.params.id;
   const comments = await models.Comment.findAll(
     {
+      // 외래키 참조 시 자동으로 PostId를 가져온다 
       include: [{ model: models.Post }],
     },
     { 

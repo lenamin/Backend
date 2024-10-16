@@ -19,5 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     }, {
       tableName: "Board" // 테이블 이름 지정도 가능 
   });
+
+  Post.associate = function (models)  {
+    Post.hasMany(models.Comment);
+  };
    return Post // Post 객체 반환 
 };
