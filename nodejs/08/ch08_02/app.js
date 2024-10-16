@@ -51,6 +51,22 @@ app.put("/posts/:id", async (req, res) => {
   }
 })
 
+app.delete("/posts/:id", async (req, res) => {
+  // models.Post.destroyAll()
+  // models.Post.truncate();
+  const result = await models.Post.destroy({
+    where: {
+      id: req.params.id,
+    },
+  });
+  console.log(`destroy result: ${result}`);
+  if(result) {
+    res.status(204).send();
+  } else {
+    res.status(404).json({ result: "not found psot"});
+  }
+});
+
 // 서버 띄우기 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT} 에서`);
