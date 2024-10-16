@@ -88,6 +88,20 @@ app.get("/posts/:id/comments", async (req, res) => {
   res.status(200).json({ data: comments });
 })
 
+app.put("/comments/:id", async (req, res) => {
+  const id = req.params.id;
+  const { content } = req.body;
+  const comment = await models.Comment.findByPk(id);
+
+  if (comment) {
+    comment.content = content;
+    await comment.save();
+    res.json({data: comment});
+  } else {
+    res.status(404).json({result: "comment is not found"});
+  }
+});
+
 // 서버 띄우기 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT} 에서`);
