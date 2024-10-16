@@ -20,6 +20,11 @@ app.post("/posts", async (req, res) => {
   res.status(201).json(post);
 })
 
+app.get("/posts", async (req, res) => {
+  const posts = await models.Post.findAll(); // select * from posts;
+  res.json({ data: posts });
+});
+
 // 서버 띄우기 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT} 에서`);
