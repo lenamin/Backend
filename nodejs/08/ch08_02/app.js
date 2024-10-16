@@ -21,7 +21,7 @@ app.post("/posts", async (req, res) => {
 })
 
 app.get("/posts", async (req, res) => {
-  const posts = await models.Post.findAll(); // select * from posts;
+  const posts = await models.Post.findAll();
   res.json({ data: posts });
 });
 
@@ -77,6 +77,16 @@ app.post("/posts/:id/comments", async (req, res) => {
   });
   res.status(201).json({ data: comment });
 });
+
+app.get("/posts/:id/comments", async (req, res) => {
+  const postId = req.params.id;
+  const comments = await models.Comment.findAll({
+    where: {
+      PostId: postId
+    }
+  });
+  res.status(200).json({ data: comments });
+})
 
 // 서버 띄우기 
 app.listen(PORT, () => {
