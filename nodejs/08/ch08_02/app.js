@@ -80,7 +80,11 @@ app.post("/posts/:id/comments", async (req, res) => {
 
 app.get("/posts/:id/comments", async (req, res) => {
   const postId = req.params.id;
-  const comments = await models.Comment.findAll({
+  const comments = await models.Comment.findAll(
+    {
+      include: [{ model: models.Post }],
+    },
+    { 
     where: {
       PostId: postId
     }
