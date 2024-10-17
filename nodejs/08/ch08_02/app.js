@@ -29,12 +29,20 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage});
 
-app.post("/posts", async (req, res) => {
+app.post("/posts", upload.single("file"), async (req, res) => {
   const { title, content, author } = req.body;
+  let filename = req.file ? req.file.filename : null; 
+  // 파일 있으면 multer가 자동으로 파일 저장 / 없으면 null 반환 
+
+  // 클라이언트에 효율적으로 serving 하기 위해 링크 형태로 전달해줄 것. 
+  filename = `downloads/${filename}`; // filename은 아까 storage에서 설정해준 이름이 적용되겠지. 
+  
+
   const post = await models.Post.create({
     title: title,
     content: content,
     author: author,
+    filename: filename,
   });
   res.status(201).json(post);
 })
