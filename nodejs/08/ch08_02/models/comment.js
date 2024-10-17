@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-
     content: DataTypes.STRING,
   });
   Comment.associate = function (models) {

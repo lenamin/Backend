@@ -1,14 +1,33 @@
 const express = require('express');
 const path = require('path');
 const models = require('./models'); 
+const multer = require('multer');
 // ./modesl/index.js가 자동으로 불려짐 
 //-> 해당 index에서 module.exports 에 db를 넣음 
 // -> exports 된 걸 models라는 변수로 사용한다. -> 만들어놓은 모든 models에 접근할 수 있다 !! 
 
 const app = express();
 const PORT = 3000;
+const upload_dir = `public/uploads`
 
 app.use(express.json()); // body를 모두 json으로 읽을 수 있게 
+
+app.use(express.urlencoded({ extens: true }));
+app.use("/downloads", express.static(path.join(__dirname, upload_dir))); 
+// download 요청을 하면 "public/uploads" 디렉토리를 바라보도록 해준다. 
+
+const storage = multer.diskStorage({
+  // 여기에 설정 정보 넣어줄 것 
+  destination: `./${upload_dir}`, 
+  filename: function(req, file, cb) {
+    // 콜백 설정하면서 파일네임 
+    // null : error 부분, 필요하면 구현할 수 있음 
+    cb(null,
+      path.parse(file.originalname).name + "-" + Date.now() + path.extname(file.originalname)// 실제 파일 이름 가져와서 시간스탬프 + extension 붙여주기 
+     );
+  }
+})
+const upload = multer({storage: storage});
 
 app.post("/posts", async (req, res) => {
   const { title, content, author } = req.body;

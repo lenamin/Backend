@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     content: DataTypes.STRING,
     author: DataTypes.STRING(50),
+    filename: DataTypes.STRING,
     }, {
       tableName: "Board" // 테이블 이름 지정도 가능 
   });
