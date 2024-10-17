@@ -33,8 +33,8 @@ const findAllPost = async (req, res) => {
   try {
     const posts = await postService.findAllPost();
     res.status(200).json({data: posts});
-  } catch {
-    res.status(500).json({ error: e.error });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 
 };
@@ -43,7 +43,7 @@ const updatePost = async (req, res) => {
   try {
     const post = await postService.updatePost(req.params.id, req.body);
     if (post) {
-      res.status(200).json({ data: post });
+      res.status(200).json({ data: "Success" });
     } else {
       res.status(404).json({ data: 'post not found' });
     }

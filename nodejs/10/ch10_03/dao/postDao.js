@@ -7,14 +7,14 @@ const createPost = async (data) => {
 
 // 특정 게시글 가져오기 
 const findPostById = async (id) => {
-  return await models.Post.findByPk(id);
+  return await models.Post.findPostByPk(id);
 };
 
 // 게시글 목록 조회 
 const findAllPost = async () => {
   return await models.Post.findAll({ 
     include: {
-      model: models.Uwer,
+      model: models.User,
     },
   });
 };
