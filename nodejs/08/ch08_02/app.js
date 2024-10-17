@@ -36,7 +36,6 @@ app.post("/posts", upload.single("file"), async (req, res) => {
 
   // 클라이언트에 효율적으로 serving 하기 위해 링크 형태로 전달해줄 것. 
   filename = `downloads/${filename}`; // filename은 아까 storage에서 설정해준 이름이 적용되겠지. 
-  
 
   const post = await models.Post.create({
     title: title,
@@ -71,6 +70,11 @@ app.put("/posts/:id", async (req, res) => {
   if (post) {
     post.title = title;
     post.content = content;
+
+    if (req.file) {
+      post.filename = filename;
+    }
+
     await post.save();
     res.status(200).json({ data: post });
   } else {
