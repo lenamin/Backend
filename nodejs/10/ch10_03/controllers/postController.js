@@ -7,7 +7,13 @@ const createPost = async (req, res) => {
   // db 가져올 때 예외 발생할 수 있으므로 try-catch 문 작성 
   try { 
     // { "title":"a", "content":"b", "userId":2} = req.body
-    const post = await postService.createPost(req.body);
+    // const post = await postService.createPost(req.body);
+    const user = req.user;
+    const post = await postService.createPost({
+      title: req.body.title,
+      content: req.body.content,
+      userId: user.id,
+    })
     res.status(201).json({ data: post });
   } catch (e) {
     res.status(500).json({error: e.message }); 

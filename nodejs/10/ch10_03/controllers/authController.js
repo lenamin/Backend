@@ -23,6 +23,19 @@ const register = async (req, res) => {
     }
 };
 
+const refresh = (req, res) => {
+    const { token } = req.body;
+    if (!token) return res.sendStatus(401);
+    jwt.verify(token, 'refresh_secret', (err, user) => {
+        if(err) return res.sendStatus(403);
+
+        const accessToken = generateAccessToken(user);
+        res.json({
+            accessToken,
+        });
+    });
+};
+
 // 로그인 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -31,13 +44,15 @@ const login = async (req, res) => {
         if (!user) { // user 없는 경우, 
             return res.status(400).json({ message: "Invalid email or password" });
         }
+
         const isMatch = await bcrypt.compare(password, user.password);
+        
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
         // 에러 던져주기만 하고, 매번 요청할 때 마다 클라이언트에서 인증정보 요청 
         const accessToken = generateAccessToken(user);
-        const refreshToken = refreshToken(user);
+        const refreshToken = generateRefreshToken(user);
 
         res.json({
             accessToken,
@@ -50,4 +65,6 @@ const login = async (req, res) => {
 
 module.exports = {
     register,
+    login,
+    refresh,
 };
