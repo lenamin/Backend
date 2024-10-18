@@ -21,7 +21,7 @@ const findUserByEmail = async (email) => {
     });
 };
 
-MediaSourceHandle.exports = {
+module.exports = {
     createUser,
     findAllUsers,
     updateUser,

@@ -10,7 +10,7 @@ const findUserByEmail = async (email) => {
     return await userDao.findUserByEmail(email);
 };
 
-MediaSourceHandle.exports = {
+module.exports = {
     createUser,
     findUserByEmail,
 };
