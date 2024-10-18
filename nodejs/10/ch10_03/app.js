@@ -1,6 +1,6 @@
 const express = require('express');
 const postRoute = require('./routes/postRoute');
-
+const authRoute = require('./routes/authRoute');
 // model 받기 
 const models = require('./models');
 const app = express();
@@ -8,6 +8,7 @@ const PORT = 3000;
 
 app.use(express.json()); 
 app.use('/posts', postRoute);
+app.use('/auth', authRoute);
 // 더 많은 기능이 필요하다면 
 // app.user("//Users", userRoute); 
 // app.use("/Comments", commentRoute); 의 형태로 더 확장할 수 있다 
