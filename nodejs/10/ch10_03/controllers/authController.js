@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const userService = require("../services/userService");
 
+const { createUser } = require("../dao/userDao");
+const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+
 // 회원가입 
 const register = async (req, res) => {
     const { email, name, password } = req.body;
@@ -18,4 +21,33 @@ const register = async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: e.message })
     }
+};
+
+// 로그인 
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await userService.findUserByEmail(email);
+        if (!user) { // user 없는 경우, 
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid email or password" });
+        }
+        // 에러 던져주기만 하고, 매번 요청할 때 마다 클라이언트에서 인증정보 요청 
+        const accessToken = generateAccessToken(user);
+        const refreshToken = refreshToken(user);
+
+        res.json({
+            accessToken,
+            refreshToken,
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.mesage });
+    }
+}
+
+module.exports = {
+    register,
 };
